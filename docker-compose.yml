@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  backend:
+    build:
+      context: ./detailing-be
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - AUTH0_CLIENT_ID=oyQqfte2ZTKaEBnWAyOuSmdZyegbdIFV
+      - AUTH0_CLIENT_SECRET=VEygPkKD5WYSjnjkTaod3NpVHabk8De2o6ROXSWgIzktAgo8EV4_A1437E4UHdw7
+      - AUTH0_DOMAIN=dev-vmtwqb6p6lr3if0d.us.auth0.com
+
+  frontend:
+    build:
+      context: ./detailing-fe
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./detailing-fe:/app
