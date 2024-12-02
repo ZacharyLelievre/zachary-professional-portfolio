@@ -1,16 +1,16 @@
 package com.example.highenddetailing.servicessubdomain.datalayer;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 
 @Data
 @Table(name = "services")
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
+@Builder
 public class Service {
 
     @Id
