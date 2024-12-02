@@ -9,15 +9,43 @@ website:
 
 spring:
   datasource:
-    url: jdbc:h2:mem:testdb
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
+    url: jdbc:mysql://mysql1/highenddetailing-db
+    username: admin
+    password: pwd
+
   jpa:
     hibernate:
-      ddl-auto: update
-    show-sql: true
-    database-platform: org.hibernate.dialect.H2Dialect
+      ddl-auto: none
+
+  config:
+    activate:
+      on-profile: docker
+
+  sql:
+    init:
+      platform: mysql
+      mode: always
+
+  phpmyadmin:
+    image: phpmyadmin:5.2.0
+    container_name: PhpMyAdmin
+    links:
+      - mysql1
+    restart: always
+    ports:
+      - 5013:80
+    environment:
+      - PMA_ARBITRARY=1
+#  datasource:
+#    url: jdbc:h2:mem:testdb
+#    driver-class-name: org.h2.Driver
+#    username: sa
+#    password:
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#    show-sql: true
+#    database-platform: org.hibernate.dialect.H2Dialect
   auth0:
     audience: https://highenddetailing/api
 
