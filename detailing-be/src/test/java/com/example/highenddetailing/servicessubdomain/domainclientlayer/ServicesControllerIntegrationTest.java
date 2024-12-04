@@ -36,16 +36,16 @@ public class ServicesControllerIntegrationTest {
     public void initData() {
         // Insert mock data into the database (if needed)
         serviceRepository.saveAll(Arrays.asList(
-                new Service("Service 1", "Description of service 1", 100.00f),
-                new Service("Service 2", "Description of service 2", 200.00f),
-                new Service("Service 3", "Description of service 3", 300.00f),
-                new Service("Service 4", "Description of service 4", 400.00f),
-                new Service("Service 5", "Description of service 5", 500.00f),
-                new Service("Service 6", "Description of service 6", 600.00f),
-                new Service("Service 7", "Description of service 7", 700.00f),
-                new Service("Service 8", "Description of service 8", 800.00f),
-                new Service("Service 9", "Description of service 9", 900.00f),
-                new Service("Service 10", "Description of service 10", 1000.00f)
+                new Service("Service 1", "Description of service 1", 100.00f, "resources/images/service/detailing-service-1.jpg"),
+                new Service("Service 2", "Description of service 2", 200.00f, "resources/images/service/detailing-service-1.jpg"),
+                new Service("Service 3", "Description of service 3", 300.00f, "resources/images/service/detailing-service-1.jpg"),
+                new Service("Service 4", "Description of service 4", 400.00f, "resources/images/service/detailing-service-1.jpg"),
+                new Service("Service 5", "Description of service 5", 500.00f, "resources/images/service/detailing-service-1.jpg"),
+                new Service("Service 6", "Description of service 6", 600.00f, "resources/images/service/detailing-service-1.jpg"),
+                new Service("Service 7", "Description of service 7", 700.00f, "resources/images/service/detailing-service-1.jpg"),
+                new Service("Service 8", "Description of service 8", 800.00f, "resources/images/service/detailing-service-1.jpg"),
+                new Service("Service 9", "Description of service 9", 900.00f, "resources/images/service/detailing-service-1.jpg"),
+                new Service("Service 10", "Description of service 10", 1000.00f, "resources/images/service/detailing-service-1.jpg")
         ));
     }
 

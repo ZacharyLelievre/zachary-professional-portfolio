@@ -35,8 +35,8 @@ public class ServicesControllerUnitTest {
     @BeforeEach
     public void setup() {
         services = Arrays.asList(
-                new Service("Service 1", "Description of service 1", 100.00f),
-                new Service("Service 2", "Description of service 2", 200.00f)
+                new Service("Service 1", "Description of service 1", 100.00f, "resources/images/service/detailing-service-1.jpg"),
+                new Service("Service 2", "Description of service 2", 200.00f, "resources/images/service/detailing-service-1.jpg")
         );
 
         serviceResponseModels = Arrays.asList(

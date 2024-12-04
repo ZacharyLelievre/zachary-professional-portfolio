@@ -29,13 +29,13 @@ class ServiceServiceUnitTest {
     @Test
     void whenGetAllServices_thenReturnAllServices() {
         // Arrange
-        Service service1 = new Service(1, new ServiceIdentifier(), "Test Service 1", "1 Hour", 100.00f);
-        Service service2 = new Service(2, new ServiceIdentifier(), "Test Service 2", "2 Hours", 200.00f);
+        Service service1 = new Service(1, new ServiceIdentifier(), "Test Service 1", "1 Hour", 100.00f, "TEST");
+        Service service2 = new Service(2, new ServiceIdentifier(), "Test Service 2", "2 Hours", 200.00f, "TEST");
 
         List<Service> services = List.of(service1, service2);
         List<ServiceResponseModel> responseModels = List.of(
-                new ServiceResponseModel("id1", "Test Service 1", "1 Hour", 100.00f),
-                new ServiceResponseModel("id2", "Test Service 2", "2 Hours", 200.00f)
+                new ServiceResponseModel("id1", "Test Service 1", "1 Hour", 100.00f, "detailing-service-1"),
+                new ServiceResponseModel("id2", "Test Service 2", "2 Hours", 200.00f, "detailing-service-1")
         );
 
         when(serviceRepository.findAll()).thenReturn(services);

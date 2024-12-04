@@ -16,4 +16,5 @@ public class ServiceResponseModel {
     private String serviceName;
     private String timeRequired;
     private float price;
+    private String imagePath;
 }
