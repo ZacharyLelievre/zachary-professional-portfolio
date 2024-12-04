@@ -38,3 +38,4 @@ out/
 
 ### secrets ###
 secrets.env
+docker-compose.yml
