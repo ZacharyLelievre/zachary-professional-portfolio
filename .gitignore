@@ -37,5 +37,5 @@ out/
 .vscode/
 
 ### secrets ###
-secrets.env
-docker-compose.yml
+.env
+./detailing-fe/.env
