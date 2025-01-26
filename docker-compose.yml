@@ -1,13 +1,32 @@
 version: '3'
 
 services:
+  mysql:  # Add MySQL service
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: highenddetailing
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - app-network
+
   backend:
     build:
       context: ./portfolio-be
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
-
+    environment:  # Add DB environment variables
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/highenddetailing
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: rootpassword
+    depends_on:  # Ensure MySQL starts first
+      - mysql
+    networks:
+      - app-network
 
   frontend:
     build:
@@ -16,4 +35,13 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./detailing-fe:/app
+      - ./portfolio-fe:/app
+    networks:
+      - app-network
+
+networks:  # Add network configuration
+  app-network:
+    driver: bridge
+
+volumes:  # Add persistent storage for MySQL
+  mysql_data:
