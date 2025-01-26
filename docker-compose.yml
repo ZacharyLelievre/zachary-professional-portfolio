@@ -15,7 +15,7 @@ services:
 
   backend:
     build:
-      context: ./portfolio-be
+      context: ./detailing-be
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
@@ -30,12 +30,12 @@ services:
 
   frontend:
     build:
-      context: ./portfolio-fe
+      context: ./detailing-fe
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
     volumes:
-      - ./portfolio-fe:/app
+      - ./detailing-fe:/app
     networks:
       - app-network
 
