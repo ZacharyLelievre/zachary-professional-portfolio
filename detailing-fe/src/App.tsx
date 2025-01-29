@@ -3,7 +3,9 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import './App.css';
 import './img.png';
-import ParticlesBackground from './ParticlesBackground'; // Import the ParticlesBackground component
+import ParticlesBackground from './ParticlesBackground';
+import { FaEnvelope, FaLinkedin, FaGithub } from 'react-icons/fa'; // Import icons
+
 
 interface User {
     name: string;
@@ -41,25 +43,24 @@ const App: React.FC = () => {
     ]);
     const [error, setError] = React.useState<string | null>(null);
 
-    // Fake Experience Data
     const experiences: Experience[] = [
         {
-            company: "Tech Innovators Inc.",
-            role: "Senior Software Engineer",
-            duration: "Jan 2023 - Present",
-            description: "Leading a team of developers in creating scalable web applications."
+            company: "EMsolution",
+            role: "Software Developer",
+            duration: "Starting Soon",
+            description: "Upcoming role as a Software Developer at EMsolution."
         },
         {
-            company: "Creative Solutions LLC",
-            role: "Frontend Developer",
-            duration: "Jun 2020 - Dec 2022",
-            description: "Developed responsive user interfaces with React and Redux."
+            company: "Wal-Mart",
+            role: "Customer Experience and Sales",
+            duration: "July 2021 - Present",
+            description: "My responsibilities primarily involved assisting customers in finding specific products, handling online calls, and processing online orders, including in-person distribution to customers."
         },
         {
-            company: "Web Startups Co.",
-            role: "Junior Developer",
-            duration: "Jan 2018 - May 2020",
-            description: "Assisted in building and maintaining company websites using HTML, CSS, and JavaScript."
+            company: "Capsol Inc.",
+            role: "Office Clerk",
+            duration: "Jan 2019 - Jun 2021",
+            description: "Data entry and filing."
         }
     ];
 
@@ -210,9 +211,15 @@ const App: React.FC = () => {
             >
                 <h2>Get in Touch</h2>
                 <div className="contact-links">
-                    <a href="mailto:lelievrezachary@gmail.com">lelievrezachary@gmail.com</a>
-                    <a href="https://www.linkedin.com/in/zachary-lelièvre-757621230/">LinkedIn</a>
-                    <a href="https://github.com/ZacharyLelievre">GitHub</a>
+                    <a href="mailto:lelievrezachary@gmail.com">
+                        <FaEnvelope className="icon" /> lelievrezachary@gmail.com
+                    </a>
+                    <a href="https://www.linkedin.com/in/zachary-lelièvre-757621230/">
+                        <FaLinkedin className="icon" /> LinkedIn
+                    </a>
+                    <a href="https://github.com/ZacharyLelievre">
+                        <FaGithub className="icon" /> GitHub
+                    </a>
                 </div>
             </motion.footer>
         </div>

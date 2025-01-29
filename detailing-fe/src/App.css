@@ -303,3 +303,28 @@ body {
 .timeline-content:hover p {
   color: var(--secondary-color);
 }
+.contact-links {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center; /* Centers the items horizontally */
+  align-items: center; /* Aligns the items vertically */
+  gap: 2rem; /* Adds spacing between links */
+}
+
+.contact-links a {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* Adds spacing between the icon and the text */
+  text-decoration: none;
+  color: var(--primary-color);
+  font-size: 1.1rem;
+  transition: color 0.3s ease;
+}
+
+.contact-links a:hover {
+  color: var(--secondary-color);
+}
+
+.icon {
+  font-size: 1.5rem; /* Makes the icons slightly larger */
+}
