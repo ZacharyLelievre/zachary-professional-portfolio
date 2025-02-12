@@ -142,7 +142,7 @@ const App: React.FC = () => {
     const t = rawT as (key: string) => string;
 
     React.useEffect(() => {
-        fetch('http://localhost:8080/api/user/1')
+        fetch('https://zachary-lelievre.com/api/user/1')
             .then(response => {
                 if (!response.ok) {
                     if (response.status === 404) {

@@ -8,7 +8,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {"http://localhost:3000", "https://zachary-lelievre.com"})
 public class UserController {
     private final UserRepository userRepository;
     private final ProjectRepository projectRepository;
