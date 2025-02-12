@@ -45,7 +45,7 @@ const SuccessPage: React.FC = () => {
 
     useEffect(() => {
         // Fetch user data
-        fetch("http://localhost:8080/api/user/1")
+        fetch("https://zachary-lelievre.com/api/user/1")
             .then(res => {
                 if (!res.ok) throw new Error("Failed to fetch user");
                 return res.json();
@@ -70,7 +70,7 @@ const SuccessPage: React.FC = () => {
         e.preventDefault();
         if (!userData) return;
 
-        fetch(`http://localhost:8080/api/user/${userData.id}`, {
+        fetch(`https://zachary-lelievre.com/api/user/${userData.id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -99,7 +99,7 @@ const SuccessPage: React.FC = () => {
         if (!userData) return;
         const newProject = { title: "New Project", description: "", technologies: "" };
 
-        fetch(`http://localhost:8080/api/user/${userData.id}/projects`, {
+        fetch(`https://zachary-lelievre.com/api/user/${userData.id}/projects`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(newProject),
@@ -121,7 +121,7 @@ const SuccessPage: React.FC = () => {
         if (!userData) return;
         const project = userData.projects[index];
 
-        fetch(`http://localhost:8080/api/projects/${project.id}`, {
+        fetch(`https://zachary-lelievre.com/api/projects/${project.id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(project),
@@ -149,7 +149,7 @@ const SuccessPage: React.FC = () => {
         if (!userData) return;
         const projectId = userData.projects[index].id;
 
-        fetch(`http://localhost:8080/api/projects/${projectId}`, {
+        fetch(`https://zachary-lelievre.com/api/projects/${projectId}`, {
             method: "DELETE"
         })
             .then((res) => {
@@ -183,7 +183,7 @@ const SuccessPage: React.FC = () => {
         if (!userData) return;
         const newExp = { company: "New Company", role: "", duration: "", description: "" };
 
-        fetch(`http://localhost:8080/api/user/${userData.id}/experiences`, {
+        fetch(`https://zachary-lelievre.com/api/user/${userData.id}/experiences`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(newExp),
@@ -205,7 +205,7 @@ const SuccessPage: React.FC = () => {
         if (!userData) return;
         const exp = userData.experiences[index];
 
-        fetch(`http://localhost:8080/api/experiences/${exp.id}`, {
+        fetch(`https://zachary-lelievre.com/api/experiences/${exp.id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(exp),
@@ -233,7 +233,7 @@ const SuccessPage: React.FC = () => {
         if (!userData) return;
         const expId = userData.experiences[index].id;
 
-        fetch(`http://localhost:8080/api/experiences/${expId}`, {
+        fetch(`https://zachary-lelievre.com/api/experiences/${expId}`, {
             method: "DELETE"
         })
             .then((res) => {
