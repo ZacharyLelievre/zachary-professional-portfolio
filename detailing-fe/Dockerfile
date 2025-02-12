@@ -3,9 +3,9 @@ FROM node:18
 # Set working directory
 WORKDIR /app
 
-# Install dependencies
+# Install dependencies with legacy-peer-deps flag to bypass TypeScript conflict
 COPY package*.json ./
-RUN npm cache clean --force && npm install
+RUN npm cache clean --force && npm install --legacy-peer-deps
 
 # Copy the rest of the application code
 COPY . .

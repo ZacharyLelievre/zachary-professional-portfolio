@@ -8,6 +8,7 @@ import { FaEnvelope, FaLinkedin, FaGithub } from 'react-icons/fa';
 import { Routes, Route } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import SuccessPage from './SuccessPage';
+import { useTranslation } from 'react-i18next';
 
 interface Project {
     title: string;
@@ -31,40 +32,67 @@ interface User {
     experiences: Experience[];
 }
 
-// Inline Navbar component with embedded CSS and login button
+// Updated Navbar component with refreshed design
 const Navbar: React.FC<{ loginWithRedirect: () => void }> = ({ loginWithRedirect }) => {
+    // Force the 't' function's signature
+    const { t: rawT, i18n } = useTranslation();
+    const t = rawT as (key: string) => string;
+
     return (
         <>
             <style>{`
         .navbar {
           position: fixed;
-          top: 20px;
+          top: 10px;
           left: 50%;
           transform: translateX(-50%);
           display: flex;
-          gap: 1rem;
-          background: rgba(26, 26, 26, 0.7); /* semi-transparent background */
-          padding: 0.5rem 1rem;
-          border-radius: 30px;
+          align-items: center;
+          justify-content: center;
+          gap: 1.5rem;
+          background: rgba(0, 0, 0, 0.5);
+          backdrop-filter: blur(10px);
+          padding: 0.75rem 1.5rem;
+          border-radius: 40px;
           z-index: 1000;
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
         .nav-link {
-          color: #ffffff; /* same as var(--text-color) */
+          color: #ffffff;
+          font-size: 1rem;
+          font-weight: 500;
           text-decoration: none;
           padding: 0.5rem 1rem;
           border-radius: 20px;
-          transition: background 0.3s, color 0.3s;
+          transition: background 0.3s ease, color 0.3s ease;
         }
         .nav-link:hover {
-          background: #2ecc71; /* same as var(--primary-color) */
-          color: #1a1a1a;     /* same as var(--background) */
+          background: var(--primary-color);
+          color: #1a1a1a;
+        }
+        .language-toggle {
+          display: flex;
+          gap: 0.5rem;
+        }
+        .language-toggle button {
+          background: transparent;
+          border: 1px solid #ffffff;
+          border-radius: 20px;
+          color: #ffffff;
+          padding: 0.3rem 0.8rem;
+          font-size: 0.9rem;
+          cursor: pointer;
+          transition: background 0.3s ease;
+        }
+        .language-toggle button:hover {
+          background: rgba(46, 204, 113, 0.2);
         }
         .login-button {
           background: linear-gradient(135deg, #2ecc71, #27ae60);
-          color: white;
-          font-size: 1.2rem;
+          color: #ffffff;
+          font-size: 1rem;
           font-weight: bold;
-          padding: 0.5rem 1rem;
+          padding: 0.6rem 1.2rem;
           border: none;
           border-radius: 30px;
           cursor: pointer;
@@ -83,12 +111,19 @@ const Navbar: React.FC<{ loginWithRedirect: () => void }> = ({ loginWithRedirect
           box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
       `}</style>
+
             <nav className="navbar">
-                <a href="#" className="nav-link">Home</a>
-                <a href="#" className="nav-link">About</a>
-                <a href="#" className="nav-link">Projects</a>
-                <a href="#" className="nav-link">Experience</a>
-                <a href="#" className="nav-link">Contact</a>
+                <a href="#" className="nav-link">{t('home')}</a>
+                <a href="#" className="nav-link">{t('about')}</a>
+                <a href="#" className="nav-link">{t('projects')}</a>
+                <a href="#" className="nav-link">{t('experience')}</a>
+                <a href="#" className="nav-link">{t('contact')}</a>
+
+                <div className="language-toggle">
+                    <button onClick={() => i18n.changeLanguage('en')}>ENG</button>
+                    <button onClick={() => i18n.changeLanguage('fr')}>FR</button>
+                </div>
+
                 <button className="login-button" onClick={() => loginWithRedirect()}>
                     Login
                 </button>
@@ -101,6 +136,10 @@ const App: React.FC = () => {
     const [user, setUser] = React.useState<User | null>(null);
     const [error, setError] = React.useState<string | null>(null);
     const { loginWithRedirect } = useAuth0();
+
+    // Force the 't' function's signature again
+    const { t: rawT } = useTranslation();
+    const t = rawT as (key: string) => string;
 
     React.useEffect(() => {
         fetch('http://localhost:8080/api/user/1')
@@ -118,17 +157,17 @@ const App: React.FC = () => {
     }, []);
 
     const fadeIn = {
-        hidden: { opacity: 0, x: -50 },      // start shifted left
-        visibleLeft: { opacity: 1, x: 0 },     // animate to center
-        visibleRight: { opacity: 1, x: 0 },    // animate to center (if needed)
+        hidden: { opacity: 0, x: -50 },
+        visibleLeft: { opacity: 1, x: 0 },
+        visibleRight: { opacity: 1, x: 0 },
     };
 
     const animationProps = {
-        initial: "hidden",
-        whileInView: "visibleLeft",
+        initial: 'hidden',
+        whileInView: 'visibleLeft',
         viewport: { once: false, amount: 0.5 },
         transition: { duration: 0.8 },
-        variants: fadeIn
+        variants: fadeIn,
     };
 
     if (error) return <div className="error">{error}</div>;
@@ -140,7 +179,6 @@ const App: React.FC = () => {
                 path="/"
                 element={
                     <>
-                        {/* Navbar with integrated login button */}
                         <Navbar loginWithRedirect={loginWithRedirect} />
                         <div className="portfolio">
                             <ParticlesBackground />
@@ -158,17 +196,17 @@ const App: React.FC = () => {
                                 <div className="skills">
                                     {user.skills
                                         ? user.skills.split(',').map(skill => skill.trim()).join(' • ')
-                                        : "No skills provided"}
+                                        : t('noSkillsProvided')}
                                 </div>
                             </motion.header>
 
                             <motion.section className="section about" {...animationProps}>
-                                <h2>About Me</h2>
+                                <h2>{t('aboutMe')}</h2>
                                 <p className="bio">{user.bio}</p>
                             </motion.section>
 
                             <motion.section className="section projects" {...animationProps}>
-                                <h2>Featured Projects</h2>
+                                <h2>{t('featuredProjects')}</h2>
                                 <div className="project-grid">
                                     {user.projects.map((project, index) => (
                                         <motion.div
@@ -193,7 +231,7 @@ const App: React.FC = () => {
                             </motion.section>
 
                             <motion.section className="section timeline" {...animationProps}>
-                                <h2>Experience Timeline</h2>
+                                <h2>{t('experienceTimeline')}</h2>
                                 <div className="timeline-container">
                                     {user.experiences.map((exp, index) => {
                                         const isLeft = index % 2 === 0;
@@ -202,11 +240,11 @@ const App: React.FC = () => {
                                                 key={index}
                                                 className={`timeline-item ${isLeft ? 'left' : 'right'}`}
                                             >
-                                                <div className="timeline-dot"></div>
+                                                <div className="timeline-dot" />
                                                 <motion.div
                                                     className="timeline-content"
                                                     initial="hidden"
-                                                    whileInView={isLeft ? "visibleLeft" : "visibleRight"}
+                                                    whileInView={isLeft ? 'visibleLeft' : 'visibleRight'}
                                                     viewport={{ once: true }}
                                                     transition={{ duration: 0.6, delay: index * 0.2 }}
                                                     variants={fadeIn}
@@ -222,7 +260,7 @@ const App: React.FC = () => {
                             </motion.section>
 
                             <motion.footer className="contact" {...animationProps}>
-                                <h2>Get in Touch</h2>
+                                <h2>{t('getInTouch')}</h2>
                                 <div className="contact-links">
                                     <a href="mailto:lelievrezachary@gmail.com">
                                         <FaEnvelope className="icon" /> lelievrezachary@gmail.com
@@ -239,7 +277,6 @@ const App: React.FC = () => {
                     </>
                 }
             />
-
             <Route path="/success" element={<SuccessPage />} />
         </Routes>
     );
