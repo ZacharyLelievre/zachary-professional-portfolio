@@ -43,7 +43,7 @@ services:
       context: ./detailing-fe
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - "3000:80"
     networks:
       - app-network
     depends_on:
