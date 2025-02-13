@@ -16,5 +16,14 @@
   "submit": "Submit",
   "thankYouPending": "Thank you! Your comment is pending approval.",
   "errorSubmitting": "Error submitting comment.",
-  "says": "says"
+  "says": "says",
+  "footerContactTitle": "Contact Me",
+  "footerContactSubtext": "Want to collaborate or learn more? Drop me a message!",
+  "footerLeaveComment": "Leave a Comment",
+  "footerOr": "or",
+  "footerEmailMe": "Email Me",
+  "footerFollowTitle": "Follow Me",
+  "footerFollowSubtext": "Follow my journey and stay in the loop:",
+  "footerResumeTitle": "Download My Resume",
+  "footerResumeSubtext": "Grab a copy of my resume in your preferred language:"
 }

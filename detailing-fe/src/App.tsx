@@ -1,4 +1,3 @@
-// src/App.tsx
 import React from 'react';
 import { motion } from 'framer-motion';
 import './App.css';
@@ -33,7 +32,6 @@ interface User {
     experiences: Experience[];
 }
 
-// Slimmed-down Navbar with only Home and Comments links
 const Navbar: React.FC<{ loginWithRedirect: () => void }> = ({ loginWithRedirect }) => {
     const { t: rawT, i18n } = useTranslation();
     const t = rawT as (key: string) => string;
@@ -113,7 +111,7 @@ const Navbar: React.FC<{ loginWithRedirect: () => void }> = ({ loginWithRedirect
       `}</style>
             <nav className="navbar">
                 <Link to="/" className="nav-link">{t('home')}</Link>
-                <Link to="/comments" className="nav-link">Comments</Link>
+                <Link to="/comments" className="nav-link">{t('comments')}</Link>
                 <div className="language-toggle">
                     <button onClick={() => i18n.changeLanguage('en')}>ENG</button>
                     <button onClick={() => i18n.changeLanguage('fr')}>FR</button>
@@ -191,10 +189,12 @@ const App: React.FC = () => {
                                         : t('noSkillsProvided')}
                                 </div>
                             </motion.header>
+
                             <motion.section className="section about" {...animationProps}>
                                 <h2>{t('aboutMe')}</h2>
                                 <p className="bio">{user.bio}</p>
                             </motion.section>
+
                             <motion.section className="section projects" {...animationProps}>
                                 <h2>{t('featuredProjects')}</h2>
                                 <div className="project-grid">
@@ -219,6 +219,7 @@ const App: React.FC = () => {
                                     ))}
                                 </div>
                             </motion.section>
+
                             <motion.section className="section timeline" {...animationProps}>
                                 <h2>{t('experienceTimeline')}</h2>
                                 <div className="timeline-container">
@@ -247,18 +248,48 @@ const App: React.FC = () => {
                                     })}
                                 </div>
                             </motion.section>
-                            <motion.footer className="contact" {...animationProps}>
-                                <h2>{t('getInTouch')}</h2>
-                                <div className="contact-links">
-                                    <a href="mailto:lelievrezachary@gmail.com">
-                                        <FaEnvelope className="icon" /> lelievrezachary@gmail.com
+
+                            {/* FOOTER */}
+                            <motion.footer className="footer" {...animationProps}>
+                                <div className="footer-column">
+                                    <h3 className="footer-title">{t('footerContactTitle')}</h3>
+                                    <p className="footer-subtext">{t('footerContactSubtext')}</p>
+                                    <a href="/comments" className="footer-btn">
+                                        {t('footerLeaveComment')}
                                     </a>
-                                    <a href="https://www.linkedin.com/in/zachary-lelièvre-757621230/">
-                                        <FaLinkedin className="icon" /> LinkedIn
+                                    <p className="footer-or">{t('footerOr')}</p>
+                                    <a
+                                        href="mailto:lelievrezachary@gmail.com"
+                                        className="footer-btn"
+                                    >
+                                        {t('footerEmailMe')}
                                     </a>
-                                    <a href="https://github.com/ZacharyLelievre">
-                                        <FaGithub className="icon" /> GitHub
-                                    </a>
+                                </div>
+
+                                <div className="footer-column">
+                                    <h3 className="footer-title">{t('footerFollowTitle')}</h3>
+                                    <p className="footer-subtext">{t('footerFollowSubtext')}</p>
+                                    <div className="social-icons">
+                                        <a href="https://www.linkedin.com/in/zachary-lelièvre-757621230/">
+                                            <FaLinkedin />
+                                        </a>
+                                        <a href="https://github.com/ZacharyLelievre">
+                                            <FaGithub />
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div className="footer-column">
+                                    <h3 className="footer-title">{t('footerResumeTitle')}</h3>
+                                    <p className="footer-subtext">{t('footerResumeSubtext')}</p>
+                                    <div className="resume-buttons">
+                                        <a href="/Zachary%20CV%20final.pdf" download className="footer-btn">
+                                            EN
+                                        </a>
+                                        <a href="/Zachary%20Lelievre%20CV.pdf" download className="footer-btn">
+                                            FR
+                                        </a>
+                                    </div>
                                 </div>
                             </motion.footer>
                         </div>

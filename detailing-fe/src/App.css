@@ -1,5 +1,3 @@
-/* src/App.css */
-
 :root {
   --primary-color: #2ecc71;
   --secondary-color: #27ae60;
@@ -21,12 +19,14 @@ body {
   color: var(--text-color);
 }
 
+/* Main Container */
 .portfolio {
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
 }
 
+/* Hero Section */
 .hero {
   text-align: center;
   padding: 4rem 0;
@@ -50,6 +50,7 @@ body {
   color: #95a5a6;
 }
 
+/* Generic Section */
 .section {
   padding: 3rem 0;
   border-bottom: 1px solid #34495e;
@@ -69,6 +70,7 @@ body {
   color: #bdc3c7;
 }
 
+/* Projects */
 .project-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -106,49 +108,15 @@ body {
   font-size: 0.9rem;
 }
 
-.contact {
-  text-align: center;
-  padding: 4rem 0;
-}
-
-.contact-links {
-  margin-top: 2rem;
-  display: flex;
-  justify-content: center;
-  gap: 2rem;
-}
-
-.contact-links a {
-  color: var(--primary-color);
-  text-decoration: none;
-  font-size: 1.1rem;
-  transition: color 0.3s ease;
-}
-
-.contact-links a:hover {
-  color: var(--secondary-color);
-}
-
-.loading {
+/* Loading/Error */
+.loading,
+.error {
   text-align: center;
   padding: 4rem;
   font-size: 1.5rem;
 }
 
-@media (max-width: 768px) {
-  .hero h1 {
-    font-size: 2.5rem;
-  }
-
-  .hero h2 {
-    font-size: 1.5rem;
-  }
-
-  .project-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
+/* Profile Image */
 .profile-image-container {
   width: 200px;
   height: 200px;
@@ -179,7 +147,7 @@ body {
   }
 }
 
-/* Timeline Section Styles */
+/* Timeline */
 .timeline-container {
   position: relative;
   margin: 2rem 0;
@@ -195,7 +163,6 @@ body {
   bottom: 0;
   width: 2px;
   background: var(--primary-color);
-  /*transform: translateX(-50%);*/
 }
 
 .timeline-item {
@@ -239,6 +206,7 @@ body {
   padding: 1rem;
   background: transparent;
   border-radius: 8px;
+  transition: transform 0.3s ease, color 0.3s ease;
 }
 
 .timeline-content h3 {
@@ -257,7 +225,17 @@ body {
   color: #bdc3c7;
 }
 
-/* Responsive Styles */
+.timeline-content:hover {
+  transform: translateY(-5px);
+  color: var(--secondary-color);
+}
+
+.timeline-content:hover h3,
+.timeline-content:hover p {
+  color: var(--secondary-color);
+}
+
+/* Timeline Responsive */
 @media (max-width: 768px) {
   .timeline-container::before {
     left: 20px;
@@ -270,93 +248,93 @@ body {
     text-align: left !important;
     margin-bottom: 2rem;
   }
-
   .timeline-item.left,
   .timeline-item.right {
     left: 0;
   }
-
   .timeline-item::after {
     left: 15px;
   }
 }
 
-/* Remove background and box-shadow from timeline-content */
-.timeline-content {
+/* Footer (Transparent) */
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  padding: 4rem 2rem;
+  gap: 2rem;
+  /* Transparent so particles show through */
   background: transparent;
-  box-shadow: none;
-  transition: transform 0.3s ease, color 0.3s ease;
 }
 
-.timeline-content:hover {
-  transform: translateY(-5px);
-  color: var(--secondary-color);
+.footer-column {
+  flex: 1;
+  min-width: 250px;
 }
 
-/* Optional: Add a subtle hover effect for the text */
-.timeline-content h3,
-.timeline-content p {
-  transition: color 0.3s ease;
-}
-
-.timeline-content:hover h3,
-.timeline-content:hover p {
-  color: var(--secondary-color);
-}
-.contact-links {
-  margin-top: 2rem;
-  display: flex;
-  justify-content: center; /* Centers the items horizontally */
-  align-items: center; /* Aligns the items vertically */
-  gap: 2rem; /* Adds spacing between links */
-}
-
-.contact-links a {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem; /* Adds spacing between the icon and the text */
-  text-decoration: none;
+/* Footer Titles & Subtext */
+.footer-title {
   color: var(--primary-color);
-  font-size: 1.1rem;
-  transition: color 0.3s ease;
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
 }
 
-.contact-links a:hover {
+.footer-subtext {
+  color: #ffffff;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+/* "or" text under Contact Me */
+.footer-or {
+  margin: 0.5rem 0;
+  color: var(--text-color);
+  text-align: left;
+}
+
+/* Footer Buttons */
+.footer-btn {
+  display: inline-block;
+  color: var(--text-color);
+  background: var(--card-bg);
+  border: 2px solid var(--primary-color);
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  text-decoration: none;
+  margin-right: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.footer-btn:hover {
+  background: var(--primary-color);
+  transform: translateY(-3px);
+}
+
+/* Social Icons */
+.social-icons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.social-icons a {
+  color: var(--primary-color);
+  font-size: 1.6rem;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.social-icons a:hover {
   color: var(--secondary-color);
+  transform: translateY(-2px);
 }
 
-.icon {
-  font-size: 1.5rem; /* Makes the icons slightly larger */
-}
-/* Login Button Styling */
-.login-container {
+/* Resume Buttons Wrapper */
+.resume-buttons {
   display: flex;
-  justify-content: center;
-  margin-top: 1rem;
-}
-
-.login-button {
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-  color: white;
-  font-size: 1.2rem;
-  font-weight: bold;
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 30px;
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  display: flex;
-  align-items: center;
   gap: 0.5rem;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-.login-button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-}
-
-.login-button:active {
-  transform: scale(0.95);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
