@@ -37,21 +37,39 @@ interface User {
     experiences: Experience[];
 }
 
+interface Comment {
+    id: number;
+    authorName: string;
+    content: string;
+    status: string; // "PENDING" or "APPROVED"
+}
+
 const SuccessPage: React.FC = () => {
     const { isAuthenticated, logout } = useAuth0();
+
+    // User info
     const [userData, setUserData] = useState<User | null>(null);
+
+    // Array of ALL comments (approved + pending)
+    const [allComments, setAllComments] = useState<Comment[]>([]);
+
     const [loading, setLoading] = useState<boolean>(true);
     const [message, setMessage] = useState<string>("");
 
     useEffect(() => {
-        // Fetch user data
-        fetch("https://zachary-lelievre.com/api/user/1")
-            .then(res => {
-                if (!res.ok) throw new Error("Failed to fetch user");
-                return res.json();
-            })
-            .then((data: User) => {
-                setUserData(data);
+        // 1) Fetch user data
+        // 2) Fetch all comments from /api/comments/all
+        Promise.all([
+            fetch("http://localhost:8080/api/user/1"),
+            fetch("http://localhost:8080/api/comments/all")
+        ])
+            .then(async ([resUser, resAll]) => {
+                if (!resUser.ok || !resAll.ok) throw new Error("Failed to fetch data");
+                const userJson = await resUser.json();
+                const allCommentsJson = await resAll.json();
+
+                setUserData(userJson);
+                setAllComments(allCommentsJson);
                 setLoading(false);
             })
             .catch((error) => {
@@ -60,7 +78,7 @@ const SuccessPage: React.FC = () => {
             });
     }, []);
 
-    // ---------- USER INFO ----------
+    // -------------- USER INFO --------------
     const handleUserChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         if (!userData) return;
         setUserData({ ...userData, [e.target.name]: e.target.value });
@@ -70,7 +88,7 @@ const SuccessPage: React.FC = () => {
         e.preventDefault();
         if (!userData) return;
 
-        fetch(`https://zachary-lelievre.com/api/user/${userData.id}`, {
+        fetch(`http://localhost:8080/api/user/${userData.id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -85,7 +103,7 @@ const SuccessPage: React.FC = () => {
                 return res.json();
             })
             .then((updated) => {
-                setUserData(prev => prev ? { ...prev, ...updated } : prev);
+                setUserData((prev) => (prev ? { ...prev, ...updated } : prev));
                 setMessage("User info updated!");
             })
             .catch((err) => {
@@ -94,12 +112,12 @@ const SuccessPage: React.FC = () => {
             });
     };
 
-    // ---------- PROJECT HANDLERS ----------
+    // -------------- PROJECT HANDLERS --------------
     const handleAddProject = () => {
         if (!userData) return;
         const newProject = { title: "New Project", description: "", technologies: "" };
 
-        fetch(`https://zachary-lelievre.com/api/user/${userData.id}/projects`, {
+        fetch(`http://localhost:8080/api/user/${userData.id}/projects`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(newProject),
@@ -109,10 +127,10 @@ const SuccessPage: React.FC = () => {
                 return res.json();
             })
             .then((createdProject: Project) => {
-                setUserData(prev => prev ? {
-                    ...prev,
-                    projects: [...prev.projects, createdProject]
-                } : prev);
+                setUserData((prev) => {
+                    if (!prev) return null;
+                    return { ...prev, projects: [...prev.projects, createdProject] };
+                });
             })
             .catch((err) => console.error(err));
     };
@@ -121,7 +139,7 @@ const SuccessPage: React.FC = () => {
         if (!userData) return;
         const project = userData.projects[index];
 
-        fetch(`https://zachary-lelievre.com/api/projects/${project.id}`, {
+        fetch(`http://localhost:8080/api/projects/${project.id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(project),
@@ -131,11 +149,11 @@ const SuccessPage: React.FC = () => {
                 return res.json();
             })
             .then((updatedProject: Project) => {
-                setUserData(prev => {
+                setUserData((prev) => {
                     if (!prev) return null;
-                    const updatedList = [...prev.projects];
-                    updatedList[index] = updatedProject;
-                    return { ...prev, projects: updatedList };
+                    const updatedProjects = [...prev.projects];
+                    updatedProjects[index] = updatedProject;
+                    return { ...prev, projects: updatedProjects };
                 });
                 setMessage("Project updated!");
             })
@@ -149,28 +167,24 @@ const SuccessPage: React.FC = () => {
         if (!userData) return;
         const projectId = userData.projects[index].id;
 
-        fetch(`https://zachary-lelievre.com/api/projects/${projectId}`, {
-            method: "DELETE"
+        fetch(`http://localhost:8080/api/projects/${projectId}`, {
+            method: "DELETE",
         })
             .then((res) => {
                 if (!res.ok) throw new Error("Failed to delete project");
-                setUserData(prev => {
+                setUserData((prev) => {
                     if (!prev) return null;
-                    const newProjects = [...prev.projects];
-                    newProjects.splice(index, 1);
-                    return { ...prev, projects: newProjects };
+                    const updatedProjects = [...prev.projects];
+                    updatedProjects.splice(index, 1);
+                    return { ...prev, projects: updatedProjects };
                 });
             })
             .catch((err) => console.error(err));
     };
 
-    const handleProjectFieldChange = (
-        index: number,
-        field: keyof Project,
-        value: string
-    ) => {
+    const handleProjectFieldChange = (index: number, field: keyof Project, value: string) => {
         if (!userData) return;
-        setUserData(prev => {
+        setUserData((prev) => {
             if (!prev) return null;
             const updatedProjects = [...prev.projects];
             updatedProjects[index] = { ...updatedProjects[index], [field]: value };
@@ -178,12 +192,12 @@ const SuccessPage: React.FC = () => {
         });
     };
 
-    // ---------- EXPERIENCE HANDLERS ----------
+    // -------------- EXPERIENCE HANDLERS --------------
     const handleAddExperience = () => {
         if (!userData) return;
         const newExp = { company: "New Company", role: "", duration: "", description: "" };
 
-        fetch(`https://zachary-lelievre.com/api/user/${userData.id}/experiences`, {
+        fetch(`http://localhost:8080/api/user/${userData.id}/experiences`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(newExp),
@@ -193,10 +207,10 @@ const SuccessPage: React.FC = () => {
                 return res.json();
             })
             .then((createdExp: Experience) => {
-                setUserData(prev => prev ? {
-                    ...prev,
-                    experiences: [...prev.experiences, createdExp]
-                } : prev);
+                setUserData((prev) => {
+                    if (!prev) return null;
+                    return { ...prev, experiences: [...prev.experiences, createdExp] };
+                });
             })
             .catch((err) => console.error(err));
     };
@@ -205,7 +219,7 @@ const SuccessPage: React.FC = () => {
         if (!userData) return;
         const exp = userData.experiences[index];
 
-        fetch(`https://zachary-lelievre.com/api/experiences/${exp.id}`, {
+        fetch(`http://localhost:8080/api/experiences/${exp.id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(exp),
@@ -215,11 +229,11 @@ const SuccessPage: React.FC = () => {
                 return res.json();
             })
             .then((updatedExp: Experience) => {
-                setUserData(prev => {
+                setUserData((prev) => {
                     if (!prev) return null;
-                    const updatedList = [...prev.experiences];
-                    updatedList[index] = updatedExp;
-                    return { ...prev, experiences: updatedList };
+                    const updatedExperiences = [...prev.experiences];
+                    updatedExperiences[index] = updatedExp;
+                    return { ...prev, experiences: updatedExperiences };
                 });
                 setMessage("Experience updated!");
             })
@@ -233,16 +247,16 @@ const SuccessPage: React.FC = () => {
         if (!userData) return;
         const expId = userData.experiences[index].id;
 
-        fetch(`https://zachary-lelievre.com/api/experiences/${expId}`, {
-            method: "DELETE"
+        fetch(`http://localhost:8080/api/experiences/${expId}`, {
+            method: "DELETE",
         })
             .then((res) => {
                 if (!res.ok) throw new Error("Failed to delete experience");
-                setUserData(prev => {
+                setUserData((prev) => {
                     if (!prev) return null;
-                    const newExps = [...prev.experiences];
-                    newExps.splice(index, 1);
-                    return { ...prev, experiences: newExps };
+                    const updatedExps = [...prev.experiences];
+                    updatedExps.splice(index, 1);
+                    return { ...prev, experiences: updatedExps };
                 });
             })
             .catch((err) => console.error(err));
@@ -254,15 +268,51 @@ const SuccessPage: React.FC = () => {
         value: string
     ) => {
         if (!userData) return;
-        setUserData(prev => {
+        setUserData((prev) => {
             if (!prev) return null;
-            const updatedExps = [...prev.experiences];
-            updatedExps[index] = { ...updatedExps[index], [field]: value };
-            return { ...prev, experiences: updatedExps };
+            const updatedExperiences = [...prev.experiences];
+            updatedExperiences[index] = { ...updatedExperiences[index], [field]: value };
+            return { ...prev, experiences: updatedExperiences };
         });
     };
 
-    // ---------- RENDER ----------
+    // -------------- COMMENT HANDLERS (approve/delete) --------------
+    const handleApproveComment = async (commentId: number) => {
+        try {
+            const res = await fetch(`http://localhost:8080/api/comments/${commentId}/approve`, {
+                method: "PUT",
+            });
+            if (!res.ok) throw new Error("Failed to approve comment");
+
+            // Once approved, update state so status changes to "APPROVED"
+            setAllComments((prev) =>
+                prev.map((c) => (c.id === commentId ? { ...c, status: "APPROVED" } : c))
+            );
+
+            setMessage("Comment approved!");
+        } catch (err) {
+            console.error(err);
+            setMessage("Error approving comment.");
+        }
+    };
+
+    const handleDeleteComment = async (commentId: number) => {
+        try {
+            const res = await fetch(`http://localhost:8080/api/comments/${commentId}`, {
+                method: "DELETE",
+            });
+            if (!res.ok) throw new Error("Failed to delete comment");
+
+            // Remove the comment from local state
+            setAllComments((prev) => prev.filter((c) => c.id !== commentId));
+            setMessage("Comment deleted.");
+        } catch (err) {
+            console.error(err);
+            setMessage("Error deleting comment.");
+        }
+    };
+
+    // -------------- RENDER --------------
     if (!isAuthenticated) {
         return <Container sx={{ textAlign: 'center', mt: 4 }}>You are not logged in!</Container>;
     }
@@ -278,6 +328,7 @@ const SuccessPage: React.FC = () => {
             <Typography variant="h4" textAlign="center" gutterBottom>
                 Admin Dashboard
             </Typography>
+
             {message && (
                 <Typography variant="body1" color="success.main" textAlign="center" mb={2}>
                     {message}
@@ -428,6 +479,42 @@ const SuccessPage: React.FC = () => {
                             variant="outlined"
                             color="error"
                             onClick={() => handleDeleteExperience(index)}
+                        >
+                            Delete
+                        </Button>
+                    </CardActions>
+                </Card>
+            ))}
+
+            {/* ALL COMMENTS (admin can approve or delete) */}
+            <Typography variant="h6" gutterBottom mt={4}>
+                All Comments
+            </Typography>
+            {allComments.length === 0 && <p>No comments found.</p>}
+            {allComments.map((comment) => (
+                <Card sx={{ mb: 2 }} key={comment.id}>
+                    <CardContent>
+                        <Typography variant="subtitle1" fontWeight="bold">
+                            {comment.authorName}
+                        </Typography>
+                        <Typography variant="body2" sx={{ mb: 1 }}>
+                            {comment.content}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                            Status: {comment.status}
+                        </Typography>
+                    </CardContent>
+                    <CardActions>
+                        {/* Only show Approve button if it's PENDING */}
+                        {comment.status === "PENDING" && (
+                            <Button variant="contained" onClick={() => handleApproveComment(comment.id)}>
+                                Approve
+                            </Button>
+                        )}
+                        <Button
+                            variant="outlined"
+                            color="error"
+                            onClick={() => handleDeleteComment(comment.id)}
                         >
                             Delete
                         </Button>

@@ -8,5 +8,13 @@
   "featuredProjects": "Projets vedettes",
   "experienceTimeline": "Parcours professionnel",
   "getInTouch": "Contactez-moi",
-  "noSkillsProvided": "Aucune compétence fournie"
+  "noSkillsProvided": "Aucune compétence fournie",
+  "comments": "Commentaires",
+  "leaveComment": "Laissez un commentaire :",
+  "name": "Nom",
+  "comment": "Commentaire",
+  "submit": "Envoyer",
+  "thankYouPending": "Merci ! Votre commentaire est en attente d'approbation.",
+  "errorSubmitting": "Erreur lors de la soumission du commentaire.",
+  "says": "dit"
 }

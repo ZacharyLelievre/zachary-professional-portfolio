@@ -5,9 +5,10 @@ import './App.css';
 import './img.png';
 import ParticlesBackground from './ParticlesBackground';
 import { FaEnvelope, FaLinkedin, FaGithub } from 'react-icons/fa';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Link } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import SuccessPage from './SuccessPage';
+import CommentsPage from './CommentsPage';
 import { useTranslation } from 'react-i18next';
 
 interface Project {
@@ -32,9 +33,8 @@ interface User {
     experiences: Experience[];
 }
 
-// Updated Navbar component with refreshed design
+// Slimmed-down Navbar with only Home and Comments links
 const Navbar: React.FC<{ loginWithRedirect: () => void }> = ({ loginWithRedirect }) => {
-    // Force the 't' function's signature
     const { t: rawT, i18n } = useTranslation();
     const t = rawT as (key: string) => string;
 
@@ -111,19 +111,13 @@ const Navbar: React.FC<{ loginWithRedirect: () => void }> = ({ loginWithRedirect
           box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
       `}</style>
-
             <nav className="navbar">
-                <a href="#" className="nav-link">{t('home')}</a>
-                <a href="#" className="nav-link">{t('about')}</a>
-                <a href="#" className="nav-link">{t('projects')}</a>
-                <a href="#" className="nav-link">{t('experience')}</a>
-                <a href="#" className="nav-link">{t('contact')}</a>
-
+                <Link to="/" className="nav-link">{t('home')}</Link>
+                <Link to="/comments" className="nav-link">Comments</Link>
                 <div className="language-toggle">
                     <button onClick={() => i18n.changeLanguage('en')}>ENG</button>
                     <button onClick={() => i18n.changeLanguage('fr')}>FR</button>
                 </div>
-
                 <button className="login-button" onClick={() => loginWithRedirect()}>
                     Login
                 </button>
@@ -136,8 +130,6 @@ const App: React.FC = () => {
     const [user, setUser] = React.useState<User | null>(null);
     const [error, setError] = React.useState<string | null>(null);
     const { loginWithRedirect } = useAuth0();
-
-    // Force the 't' function's signature again
     const { t: rawT } = useTranslation();
     const t = rawT as (key: string) => string;
 
@@ -175,6 +167,7 @@ const App: React.FC = () => {
 
     return (
         <Routes>
+            {/* Main portfolio page */}
             <Route
                 path="/"
                 element={
@@ -182,7 +175,6 @@ const App: React.FC = () => {
                         <Navbar loginWithRedirect={loginWithRedirect} />
                         <div className="portfolio">
                             <ParticlesBackground />
-
                             <motion.header className="hero section" {...animationProps}>
                                 <div className="profile-image-container">
                                     <img
@@ -199,12 +191,10 @@ const App: React.FC = () => {
                                         : t('noSkillsProvided')}
                                 </div>
                             </motion.header>
-
                             <motion.section className="section about" {...animationProps}>
                                 <h2>{t('aboutMe')}</h2>
                                 <p className="bio">{user.bio}</p>
                             </motion.section>
-
                             <motion.section className="section projects" {...animationProps}>
                                 <h2>{t('featuredProjects')}</h2>
                                 <div className="project-grid">
@@ -229,7 +219,6 @@ const App: React.FC = () => {
                                     ))}
                                 </div>
                             </motion.section>
-
                             <motion.section className="section timeline" {...animationProps}>
                                 <h2>{t('experienceTimeline')}</h2>
                                 <div className="timeline-container">
@@ -258,7 +247,6 @@ const App: React.FC = () => {
                                     })}
                                 </div>
                             </motion.section>
-
                             <motion.footer className="contact" {...animationProps}>
                                 <h2>{t('getInTouch')}</h2>
                                 <div className="contact-links">
@@ -278,6 +266,7 @@ const App: React.FC = () => {
                 }
             />
             <Route path="/success" element={<SuccessPage />} />
+            <Route path="/comments" element={<CommentsPage />} />
         </Routes>
     );
 };

@@ -8,5 +8,13 @@
   "featuredProjects": "Featured Projects",
   "experienceTimeline": "Experience Timeline",
   "getInTouch": "Get in Touch",
-  "noSkillsProvided": "No skills provided"
+  "noSkillsProvided": "No skills provided",
+  "comments": "Comments",
+  "leaveComment": "Leave a comment:",
+  "name": "Name",
+  "comment": "Comment",
+  "submit": "Submit",
+  "thankYouPending": "Thank you! Your comment is pending approval.",
+  "errorSubmitting": "Error submitting comment.",
+  "says": "says"
 }

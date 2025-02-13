@@ -25,3 +25,10 @@ CREATE TABLE IF NOT EXISTS experiences (
     user_id INT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id)
     );
+CREATE TABLE IF NOT EXISTS comments (
+                                        id INT AUTO_INCREMENT PRIMARY KEY,
+                                        author_name VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    status VARCHAR(20) NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
