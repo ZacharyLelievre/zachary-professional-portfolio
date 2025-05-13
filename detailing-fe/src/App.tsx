@@ -15,6 +15,7 @@ interface Project {
     title: string;
     description: string;
     technologies: string;
+    link: string; // Added link field
 }
 
 interface Experience {
@@ -372,25 +373,58 @@ const App: React.FC = () => {
                             <motion.section className="section projects" {...animationProps}>
                                 <h2>{t('featuredProjects')}</h2>
                                 <div className="project-grid">
-                                    {user.projects.map((project, index) => (
-                                        <motion.div
-                                            key={index}
-                                            className="project-card"
-                                            initial="hidden"
-                                            whileInView="visibleLeft"
-                                            viewport={{ once: false, amount: 0.5 }}
-                                            transition={{ duration: 0.5, delay: index * 0.2 }}
-                                            variants={fadeIn}
-                                        >
-                                            <h3>{project.title}</h3>
-                                            <p>{project.description}</p>
-                                            <div className="tech-stack">
-                                                {project.technologies.split(',').map((tech, i) => (
-                                                    <span key={i} className="tech">{tech.trim()}</span>
-                                                ))}
-                                            </div>
-                                        </motion.div>
-                                    ))}
+                                    {user.projects.map((project, index) => {
+                                        // Create the ProjectCard component with motion effects
+                                        const ProjectContent = (
+                                            <motion.div
+                                                key={index}
+                                                className="project-card"
+                                                initial="hidden"
+                                                whileInView="visibleLeft"
+                                                viewport={{ once: false, amount: 0.5 }}
+                                                transition={{ duration: 0.5, delay: index * 0.2 }}
+                                                variants={fadeIn}
+                                                style={{
+                                                    cursor: project.link ? 'pointer' : 'default',
+                                                    transition: 'transform 0.3s, box-shadow 0.3s'
+                                                }}
+                                                whileHover={project.link ? {
+                                                    scale: 1.03,
+                                                    boxShadow: "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)"
+                                                } : {}}
+                                            >
+                                                <h3>{project.title}</h3>
+                                                <p>{project.description}</p>
+                                                <div className="tech-stack">
+                                                    {project.technologies.split(',').map((tech, i) => (
+                                                        <span key={i} className="tech">{tech.trim()}</span>
+                                                    ))}
+                                                </div>
+                                                {project.link && (
+                                                    <div className="project-link-indicator">
+                                                        <span>Click to view project</span>
+                                                    </div>
+                                                )}
+                                            </motion.div>
+                                        );
+
+                                        // If project has a link, wrap it in an anchor tag
+                                        return project.link ? (
+                                            <a
+                                                key={index}
+                                                href={project.link}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                style={{
+                                                    textDecoration: 'none',
+                                                    color: 'inherit',
+                                                    display: 'block'
+                                                }}
+                                            >
+                                                {ProjectContent}
+                                            </a>
+                                        ) : ProjectContent;
+                                    })}
                                 </div>
                             </motion.section>
 

@@ -39,6 +39,7 @@ public class ProjectController {
                     existingProject.setTitle(updatedProject.getTitle());
                     existingProject.setDescription(updatedProject.getDescription());
                     existingProject.setTechnologies(updatedProject.getTechnologies());
+                    existingProject.setLink(updatedProject.getLink()); // Add this line
                     // Make sure user is not overwritten if you want to keep the same user
                     projectRepository.save(existingProject);
                     return ResponseEntity.ok(existingProject);

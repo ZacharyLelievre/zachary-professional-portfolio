@@ -17,6 +17,7 @@ interface Project {
     title: string;
     description: string;
     technologies: string;
+    link: string; // Added link field
 }
 
 interface Experience {
@@ -115,7 +116,7 @@ const SuccessPage: React.FC = () => {
     // -------------- PROJECT HANDLERS --------------
     const handleAddProject = () => {
         if (!userData) return;
-        const newProject = { title: "New Project", description: "", technologies: "" };
+        const newProject = { title: "New Project", description: "", technologies: "", link: "" };
 
         fetch(`https://zachary-lelievre.com/api/user/${userData.id}/projects`, {
             method: "POST",
@@ -411,6 +412,31 @@ const SuccessPage: React.FC = () => {
                             label="Technologies"
                             value={proj.technologies}
                             onChange={(e) => handleProjectFieldChange(index, "technologies", e.target.value)}
+                        />
+                        {/* New field for link */}
+                        <TextField
+                            fullWidth
+                            sx={{ mb: 2 }}
+                            label="Project Link"
+                            placeholder="https://example.com"
+                            value={proj.link || ""}
+                            onChange={(e) => {
+                                // Format link if needed
+                                let value = e.target.value.trim();
+                                if (value && !value.match(/^https?:\/\//i) && value !== "") {
+                                    value = "https://" + value;
+                                }
+                                handleProjectFieldChange(index, "link", value);
+                            }}
+                            helperText="Add a URL to make this project clickable (include https://)"
+                            error={Boolean(proj.link && !proj.link.match(/^https?:\/\//i))}
+                            InputProps={{
+                                startAdornment: proj.link ? (
+                                    <Box component="span" sx={{ color: "text.secondary", fontSize: "0.8rem", mr: 1 }}>
+                                        🔗
+                                    </Box>
+                                ) : null,
+                            }}
                         />
                     </CardContent>
                     <CardActions>
