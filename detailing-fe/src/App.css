@@ -235,28 +235,67 @@ body {
   color: var(--secondary-color);
 }
 
-/* Timeline Responsive */
+/* Timeline */
+.timeline-container {
+  position: relative;
+  margin: 2rem 0;
+  padding: 0;
+  width: 100%;
+}
+.timeline-container::before {
+  content: '';
+  position: absolute;
+  left: 50%;          /* desktop: center line */
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--primary-color);
+}
+.timeline-item {
+  position: relative;
+  width: 50%;         /* desktop half-width */
+  padding: 1rem 2rem;
+  box-sizing: border-box;
+}
+.timeline-item.left  { left: 0;          text-align: right; }
+.timeline-item.right { left: 50%;        text-align: left;  }
+.timeline-item::after {
+  content: '';
+  position: absolute;
+  top: 20px;
+  width: 10px;
+  height: 10px;
+  background: var(--primary-color);
+  border-radius: 50%;
+  z-index: 1;
+}
+.timeline-item.left::after  { right: -5px; }
+.timeline-item.right::after { left:  -5px; }
+
+/* Responsive: move line & dots to the left */
 @media (max-width: 768px) {
+  /* shift the vertical line over to the left */
   .timeline-container::before {
     left: 20px;
   }
 
+  /* full-width items with left padding */
   .timeline-item {
     width: 100%;
+    left: 0 !important;
     padding-left: 40px;
     padding-right: 20px;
     text-align: left !important;
     margin-bottom: 2rem;
   }
-  .timeline-item.left,
-  .timeline-item.right {
-    left: 0;
-  }
-  .timeline-item::after {
+
+  /* force every dot 15px from the left edge */
+  .timeline-item.left::after,
+  .timeline-item.right::after {
     left: 15px;
+    right: auto;
   }
 }
-
 /* Footer (Transparent) */
 .footer {
   display: flex;

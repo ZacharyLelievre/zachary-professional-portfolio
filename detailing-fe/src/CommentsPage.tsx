@@ -8,9 +8,12 @@ import { useTranslation } from 'react-i18next';
 const Navbar: React.FC<{ loginWithRedirect: () => void }> = ({ loginWithRedirect }) => {
     const { t: rawT, i18n } = useTranslation();
     const t = rawT as (key: string) => string;
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
     return (
         <>
             <style>{`
+        /* Desktop navbar styles */
         .navbar {
           position: fixed;
           top: 10px;
@@ -27,6 +30,101 @@ const Navbar: React.FC<{ loginWithRedirect: () => void }> = ({ loginWithRedirect
           z-index: 1000;
           box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
+        
+        /* Mobile navbar completely hidden */
+        @media (max-width: 768px) {
+          .navbar {
+            display: none;
+          }
+        }
+        
+        /* Mobile hamburger button */
+        .mobile-hamburger {
+          position: fixed;
+          top: 15px;
+          right: 15px;
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          background: rgba(0, 0, 0, 0.7);
+          backdrop-filter: blur(10px);
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          z-index: 1001;
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+          cursor: pointer;
+          display: none; /* Hidden by default */
+        }
+        
+        /* Only show hamburger on mobile */
+        @media (max-width: 768px) {
+          .mobile-hamburger {
+            display: flex;
+          }
+        }
+        
+        .hamburger-line {
+          display: block;
+          width: 25px;
+          height: 3px;
+          margin: 2px 0;
+          transition: all 0.3s ease-in-out;
+          background-color: #ffffff;
+        }
+        
+        .mobile-hamburger.open .hamburger-line:nth-child(1) {
+          transform: translateY(7px) rotate(45deg);
+        }
+        
+        .mobile-hamburger.open .hamburger-line:nth-child(2) {
+          opacity: 0;
+        }
+        
+        .mobile-hamburger.open .hamburger-line:nth-child(3) {
+          transform: translateY(-7px) rotate(-45deg);
+        }
+        
+        /* Mobile menu styling */
+        .mobile-menu {
+          position: fixed;
+          top: 0;
+          right: 0;
+          width: 75%;
+          height: 100vh;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 1.5rem;
+          background: rgba(0, 0, 0, 0.9);
+          backdrop-filter: blur(10px);
+          transform: translateX(100%);
+          transition: transform 0.3s ease-in-out;
+          z-index: 999;
+          padding: 2rem;
+        }
+        
+        .mobile-menu.open {
+          transform: translateX(0);
+        }
+        
+        .mobile-menu .nav-link {
+          font-size: 1.2rem;
+          padding: 0.7rem 1.2rem;
+          width: 100%;
+          text-align: center;
+        }
+        
+        .mobile-menu .language-toggle {
+          margin: 0.5rem 0;
+        }
+        
+        .mobile-menu .login-button {
+          margin: 0.5rem 0;
+        }
+        
         .nav-link {
           color: #ffffff;
           font-size: 1rem;
@@ -80,7 +178,28 @@ const Navbar: React.FC<{ loginWithRedirect: () => void }> = ({ loginWithRedirect
           transform: scale(0.95);
           box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
+        
+        /* Background overlay when mobile menu is open */
+        .menu-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.5);
+          z-index: 998;
+          display: none;
+          opacity: 0;
+          transition: opacity 0.3s ease;
+        }
+        
+        .menu-overlay.open {
+          display: block;
+          opacity: 1;
+        }
       `}</style>
+
+            {/* Regular Navbar (desktop only) */}
             <nav className="navbar">
                 <Link to="/" className="nav-link">{t('home')}</Link>
                 <Link to="/comments" className="nav-link">{t('comments')}</Link>
@@ -92,6 +211,35 @@ const Navbar: React.FC<{ loginWithRedirect: () => void }> = ({ loginWithRedirect
                     Login
                 </button>
             </nav>
+
+            {/* Mobile Hamburger Button */}
+            <div
+                className={`mobile-hamburger ${mobileMenuOpen ? 'open' : ''}`}
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+                <span className="hamburger-line"></span>
+                <span className="hamburger-line"></span>
+                <span className="hamburger-line"></span>
+            </div>
+
+            {/* Mobile Menu */}
+            <div className={`mobile-menu ${mobileMenuOpen ? 'open' : ''}`}>
+                <Link to="/" className="nav-link" onClick={() => setMobileMenuOpen(false)}>{t('home')}</Link>
+                <Link to="/comments" className="nav-link" onClick={() => setMobileMenuOpen(false)}>{t('comments')}</Link>
+                <div className="language-toggle">
+                    <button onClick={() => {i18n.changeLanguage('en'); setMobileMenuOpen(false);}}>ENG</button>
+                    <button onClick={() => {i18n.changeLanguage('fr'); setMobileMenuOpen(false);}}>FR</button>
+                </div>
+                <button className="login-button" onClick={() => {loginWithRedirect(); setMobileMenuOpen(false);}}>
+                    Login
+                </button>
+            </div>
+
+            {/* Overlay Background when mobile menu is open */}
+            <div
+                className={`menu-overlay ${mobileMenuOpen ? 'open' : ''}`}
+                onClick={() => setMobileMenuOpen(false)}
+            ></div>
         </>
     );
 };
@@ -156,6 +304,22 @@ const CommentsPage: React.FC = () => {
           margin-top: 100px;
           color: var(--text-color);
         }
+        
+        /* Add responsive styling for mobile */
+        @media (max-width: 768px) {
+          .comments-page {
+            padding: 1rem;
+            margin-top: 80px;
+          }
+          .comments-page h2 {
+            font-size: 2rem;
+          }
+          .comment-form input,
+          .comment-form textarea {
+            max-width: 100%;
+          }
+        }
+        
         .comments-page h2 {
           font-size: 2.5rem;
           margin-bottom: 2rem;
