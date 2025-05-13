@@ -400,11 +400,6 @@ const App: React.FC = () => {
                                                         <span key={i} className="tech">{tech.trim()}</span>
                                                     ))}
                                                 </div>
-                                                {project.link && (
-                                                    <div className="project-link-indicator">
-                                                        <span>Click to view project</span>
-                                                    </div>
-                                                )}
                                             </motion.div>
                                         );
 
