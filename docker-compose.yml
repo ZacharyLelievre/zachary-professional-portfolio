@@ -1,11 +1,13 @@
+#version: '3.8'
+
 services:
   mysql:
     image: mysql:8.0
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+      MYSQL_DATABASE:      "${MYSQL_DATABASE}"
+      MYSQL_USER:          "${MYSQL_USER}"
+      MYSQL_PASSWORD:      "${MYSQL_PASSWORD}"
     ports:
       - "3307:3306"
     volumes:
@@ -26,12 +28,14 @@ services:
     ports:
       - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
-      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
-      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
-      SPRING_JPA_HIBERNATE_DDL_AUTO: ${SPRING_JPA_HIBERNATE_DDL_AUTO}
-      SPRING_SQL_INIT_MODE: ${SPRING_SQL_INIT_MODE}
-      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: ${SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT}
+      EMAIL_USER:                     "${EMAIL_USER}"
+      EMAIL_PASS:                     "${EMAIL_PASS}"
+      SPRING_DATASOURCE_URL:          "${SPRING_DATASOURCE_URL}"
+      SPRING_DATASOURCE_USERNAME:     "${SPRING_DATASOURCE_USERNAME}"
+      SPRING_DATASOURCE_PASSWORD:     "${SPRING_DATASOURCE_PASSWORD}"
+      SPRING_JPA_HIBERNATE_DDL_AUTO:  "${SPRING_JPA_HIBERNATE_DDL_AUTO}"
+      SPRING_SQL_INIT_MODE:           "${SPRING_SQL_INIT_MODE}"
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: "${SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT}"
     depends_on:
       mysql:
         condition: service_healthy
@@ -44,10 +48,10 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3000:80"
-    networks:
-      - app-network
     depends_on:
       - backend
+    networks:
+      - app-network
 
 networks:
   app-network:

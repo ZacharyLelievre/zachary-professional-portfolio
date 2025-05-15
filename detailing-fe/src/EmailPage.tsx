@@ -1,8 +1,8 @@
-// CommentsPage.tsx
-import React, { useEffect, useState } from 'react';
+// EmailPage.tsx
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth0 } from '@auth0/auth0-react';
 import ParticlesBackground from './ParticlesBackground';
+import { useAuth0 } from '@auth0/auth0-react';
 import { useTranslation } from 'react-i18next';
 
 // ------------------ Navbar ------------------
@@ -211,48 +211,48 @@ const Navbar: React.FC<{ loginWithRedirect: () => void }> = ({ loginWithRedirect
     );
 };
 
-// ------------ CommentsPage ------------
 
-interface CommentData {
-    id?: number;
-    authorName: string;
-    content: string;
-    status?: string;
-}
+// ------------------ ContactForm ------------------
+const ContactForm: React.FC = () => {
+    const [name, setName]       = useState('');
+    const [fromEmail, setFrom]  = useState('');
+    const [subject, setSubject] = useState('');
+    const [body, setBody]       = useState('');
+    const [flash, setFlash]     = useState('');
 
-const CommentsPage: React.FC = () => {
+    const sendMail = async (e: React.FormEvent) => {
+        e.preventDefault();
+        const res = await fetch('/api/send-email', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, fromEmail, subject, body })
+        });
+        if (res.ok) {
+            setFlash('Sent ✔️');
+            setName(''); setFrom(''); setSubject(''); setBody('');
+        } else {
+            setFlash('Error ❌');
+        }
+    };
+
+    return (
+        <form onSubmit={sendMail} className="contact-form">
+            <h3>Send me an email</h3>
+            <input placeholder="Your name" value={name} onChange={e => setName(e.target.value)} required />
+            <input placeholder="Your email" type="email" value={fromEmail} onChange={e => setFrom(e.target.value)} required />
+            <input placeholder="Subject" value={subject} onChange={e => setSubject(e.target.value)} required />
+            <textarea placeholder="Message…" rows={4} value={body} onChange={e => setBody(e.target.value)} required />
+            <button type="submit">Send</button>
+            {flash && <p className="flash">{flash}</p>}
+        </form>
+    );
+};
+
+// ------------------ EmailPage ------------------
+const EmailPage: React.FC = () => {
     const { loginWithRedirect } = useAuth0();
     const { t: rawT }           = useTranslation();
     const t = rawT as (key: string) => string;
-
-    const [comments, setComments]     = useState<CommentData[]>([]);
-    const [authorName, setAuthorName] = useState('');
-    const [content, setContent]       = useState('');
-    const [message, setMessage]       = useState('');
-
-    useEffect(() => {
-        fetch('https://zachary-lelievre.com/api/comments')
-            .then(res => res.json())
-            .then(data => setComments(data))
-            .catch(err => console.error(err));
-    }, []);
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        try {
-            const response = await fetch('https://zachary-lelievre.com/api/comments', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ authorName, content })
-            });
-            if (!response.ok) throw new Error('Failed to submit comment');
-            setAuthorName('');
-            setContent('');
-            setMessage(t('thankYouPending'));
-        } catch {
-            setMessage(t('errorSubmitting'));
-        }
-    };
 
     return (
         <>
@@ -260,7 +260,7 @@ const CommentsPage: React.FC = () => {
             <ParticlesBackground />
 
             <style>{`
-        .comments-page {
+        .email-page {
           max-width: 1000px;
           margin: 0 auto;
           padding: 2rem;
@@ -268,44 +268,29 @@ const CommentsPage: React.FC = () => {
           color: var(--text-color);
         }
         @media (max-width: 768px) {
-          .comments-page {
+          .email-page {
             padding: 1rem;
             margin-top: 80px;
           }
-          .comments-page h2 {
-            font-size: 2rem;
-          }
         }
-        .comments-page h2 {
+        .email-page h2 {
           font-size: 2.5rem;
           margin-bottom: 2rem;
           color: var(--primary-color);
           text-align: center;
         }
-        .comment-list {
+        /* ContactForm styles */
+        .contact-form {
           margin-bottom: 2rem;
+          text-align: center;
         }
-        .comment-item {
-          border-bottom: 1px solid #34495e;
-          padding-bottom: 1rem;
-          margin-bottom: 1rem;
-        }
-        .comment-author {
-          font-weight: bold;
-          color: var(--secondary-color);
-        }
-        .comment-form h3 {
+        .contact-form h3 {
           font-size: 1.8rem;
           color: var(--primary-color);
           margin-bottom: 1rem;
         }
-        .comment-form label {
-          display: block;
-          margin-bottom: 0.5rem;
-          font-weight: 500;
-        }
-        .comment-form input,
-        .comment-form textarea {
+        .contact-form input,
+        .contact-form textarea {
           width: 100%;
           max-width: 600px;
           padding: 0.5rem;
@@ -316,7 +301,10 @@ const CommentsPage: React.FC = () => {
           border-radius: 4px;
           font-size: 1rem;
         }
-        .comment-form button {
+        /* ensure the Send button sits below the textarea */
+        .contact-form button {
+          display: block;
+          margin: 0.5rem auto 1rem;
           background: var(--primary-color);
           border: none;
           color: #1a1a1a;
@@ -326,51 +314,22 @@ const CommentsPage: React.FC = () => {
           font-weight: bold;
           transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
-        .comment-form button:hover {
+        .contact-form button:hover {
           background: var(--secondary-color);
         }
-        .message {
+        .contact-form .flash {
           margin-top: 1rem;
           color: var(--secondary-color);
           font-weight: bold;
         }
       `}</style>
 
-            <div className="comments-page">
-                <h2>{t('comments')}</h2>
-
-                <div className="comment-list">
-                    {comments.map(c => (
-                        <div key={c.id} className="comment-item">
-                            <p className="comment-author">{c.authorName} {t('says')}:</p>
-                            <p>{c.content}</p>
-                        </div>
-                    ))}
-                </div>
-
-                <form className="comment-form" onSubmit={handleSubmit}>
-                    <h3>{t('leaveComment')}</h3>
-                    <label htmlFor="authorName">{t('name')}:</label>
-                    <input
-                        id="authorName"
-                        value={authorName}
-                        onChange={e => setAuthorName(e.target.value)}
-                        required
-                    />
-                    <label htmlFor="content">{t('comment')}:</label>
-                    <textarea
-                        id="content"
-                        rows={4}
-                        value={content}
-                        onChange={e => setContent(e.target.value)}
-                        required
-                    />
-                    <button type="submit">{t('submit')}</button>
-                </form>
-                {message && <p className="message">{message}</p>}
+            <div className="email-page">
+                <h2>Email</h2>
+                <ContactForm />
             </div>
         </>
     );
 };
 
-export default CommentsPage;
+export default EmailPage;
