@@ -27,6 +27,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
                         redirect_uri: `${window.location.origin}/success`,
                         audience: auth0Config.audience,
                         scope: "openid profile email",
+                        screen_hint: "login"    // ← forces the login-only form
                     }}
                 >
                     <App />

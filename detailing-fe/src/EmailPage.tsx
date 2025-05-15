@@ -1,4 +1,4 @@
-// EmailPage.tsx
+// src/EmailPage.tsx
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import ParticlesBackground from './ParticlesBackground';
@@ -158,10 +158,12 @@ const Navbar: React.FC<{ loginWithRedirect: () => void }> = ({ loginWithRedirect
           background: rgba(0, 0, 0, 0.5);
           z-index: 998;
           opacity: 0;
+          pointer-events: none;
           transition: opacity 0.3s ease;
         }
         .menu-overlay.open {
           opacity: 1;
+          pointer-events: auto;
         }
       `}</style>
 
@@ -169,7 +171,7 @@ const Navbar: React.FC<{ loginWithRedirect: () => void }> = ({ loginWithRedirect
             <nav className="navbar">
                 <Link to="/" className="nav-link">{t('home')}</Link>
                 <Link to="/comments" className="nav-link">{t('comments')}</Link>
-                <Link to="/email" className="nav-link">Email</Link>
+                <Link to="/email" className="nav-link">{t('email')}</Link>
                 <div className="language-toggle">
                     <button onClick={() => i18n.changeLanguage('en')}>ENG</button>
                     <button onClick={() => i18n.changeLanguage('fr')}>FR</button>
@@ -182,7 +184,7 @@ const Navbar: React.FC<{ loginWithRedirect: () => void }> = ({ loginWithRedirect
             {/* Mobile */}
             <div
                 className={`mobile-hamburger ${mobileMenuOpen ? 'open' : ''}`}
-                onClick={() => setMobileMenuOpen(open => !open)}
+                onClick={() => setMobileMenuOpen(o => !o)}
             >
                 <span className="hamburger-line" />
                 <span className="hamburger-line" />
@@ -191,7 +193,7 @@ const Navbar: React.FC<{ loginWithRedirect: () => void }> = ({ loginWithRedirect
             <div className={`mobile-menu ${mobileMenuOpen ? 'open' : ''}`}>
                 <Link to="/" className="nav-link" onClick={() => setMobileMenuOpen(false)}>{t('home')}</Link>
                 <Link to="/comments" className="nav-link" onClick={() => setMobileMenuOpen(false)}>{t('comments')}</Link>
-                <Link to="/email" className="nav-link" onClick={() => setMobileMenuOpen(false)}>Email</Link>
+                <Link to="/email" className="nav-link" onClick={() => setMobileMenuOpen(false)}>{t('email')}</Link>
                 <div className="language-toggle">
                     <button onClick={() => { i18n.changeLanguage('en'); setMobileMenuOpen(false); }}>ENG</button>
                     <button onClick={() => { i18n.changeLanguage('fr'); setMobileMenuOpen(false); }}>FR</button>
@@ -211,14 +213,15 @@ const Navbar: React.FC<{ loginWithRedirect: () => void }> = ({ loginWithRedirect
     );
 };
 
-
 // ------------------ ContactForm ------------------
 const ContactForm: React.FC = () => {
-    const [name, setName]       = useState('');
-    const [fromEmail, setFrom]  = useState('');
+    const { t: rawT } = useTranslation();
+    const t = rawT as (key: string) => string;
+    const [name, setName] = useState('');
+    const [fromEmail, setFrom] = useState('');
     const [subject, setSubject] = useState('');
-    const [body, setBody]       = useState('');
-    const [flash, setFlash]     = useState('');
+    const [body, setBody] = useState('');
+    const [flash, setFlash] = useState('');
 
     const sendMail = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -228,21 +231,43 @@ const ContactForm: React.FC = () => {
             body: JSON.stringify({ name, fromEmail, subject, body })
         });
         if (res.ok) {
-            setFlash('Sent ✔️');
+            setFlash(t('sent'));
             setName(''); setFrom(''); setSubject(''); setBody('');
         } else {
-            setFlash('Error ❌');
+            setFlash(t('error'));
         }
     };
 
     return (
         <form onSubmit={sendMail} className="contact-form">
-            <h3>Send me an email</h3>
-            <input placeholder="Your name" value={name} onChange={e => setName(e.target.value)} required />
-            <input placeholder="Your email" type="email" value={fromEmail} onChange={e => setFrom(e.target.value)} required />
-            <input placeholder="Subject" value={subject} onChange={e => setSubject(e.target.value)} required />
-            <textarea placeholder="Message…" rows={4} value={body} onChange={e => setBody(e.target.value)} required />
-            <button type="submit">Send</button>
+            <h3>{t('sendEmail')}</h3>
+            <input
+                placeholder={t('yourName')}
+                value={name}
+                onChange={e => setName(e.target.value)}
+                required
+            />
+            <input
+                placeholder={t('yourEmail')}
+                type="email"
+                value={fromEmail}
+                onChange={e => setFrom(e.target.value)}
+                required
+            />
+            <input
+                placeholder={t('subject')}
+                value={subject}
+                onChange={e => setSubject(e.target.value)}
+                required
+            />
+            <textarea
+                placeholder={t('message')}
+                rows={4}
+                value={body}
+                onChange={e => setBody(e.target.value)}
+                required
+            />
+            <button type="submit">{t('send')}</button>
             {flash && <p className="flash">{flash}</p>}
         </form>
     );
@@ -251,7 +276,7 @@ const ContactForm: React.FC = () => {
 // ------------------ EmailPage ------------------
 const EmailPage: React.FC = () => {
     const { loginWithRedirect } = useAuth0();
-    const { t: rawT }           = useTranslation();
+    const { t: rawT } = useTranslation();
     const t = rawT as (key: string) => string;
 
     return (
@@ -279,7 +304,6 @@ const EmailPage: React.FC = () => {
           color: var(--primary-color);
           text-align: center;
         }
-        /* ContactForm styles */
         .contact-form {
           margin-bottom: 2rem;
           text-align: center;
@@ -301,7 +325,6 @@ const EmailPage: React.FC = () => {
           border-radius: 4px;
           font-size: 1rem;
         }
-        /* ensure the Send button sits below the textarea */
         .contact-form button {
           display: block;
           margin: 0.5rem auto 1rem;
@@ -325,7 +348,7 @@ const EmailPage: React.FC = () => {
       `}</style>
 
             <div className="email-page">
-                <h2>Email</h2>
+                <h2>{t('email')}</h2>
                 <ContactForm />
             </div>
         </>

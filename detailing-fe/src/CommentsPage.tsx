@@ -1,4 +1,4 @@
-// CommentsPage.tsx
+// src/CommentsPage.tsx
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
@@ -158,10 +158,12 @@ const Navbar: React.FC<{ loginWithRedirect: () => void }> = ({ loginWithRedirect
           background: rgba(0, 0, 0, 0.5);
           z-index: 998;
           opacity: 0;
+          pointer-events: none;
           transition: opacity 0.3s ease;
         }
         .menu-overlay.open {
           opacity: 1;
+          pointer-events: auto;
         }
       `}</style>
 
@@ -169,7 +171,7 @@ const Navbar: React.FC<{ loginWithRedirect: () => void }> = ({ loginWithRedirect
             <nav className="navbar">
                 <Link to="/" className="nav-link">{t('home')}</Link>
                 <Link to="/comments" className="nav-link">{t('comments')}</Link>
-                <Link to="/email" className="nav-link">Email</Link>
+                <Link to="/email" className="nav-link">{t('email')}</Link>
                 <div className="language-toggle">
                     <button onClick={() => i18n.changeLanguage('en')}>ENG</button>
                     <button onClick={() => i18n.changeLanguage('fr')}>FR</button>
@@ -182,7 +184,7 @@ const Navbar: React.FC<{ loginWithRedirect: () => void }> = ({ loginWithRedirect
             {/* Mobile */}
             <div
                 className={`mobile-hamburger ${mobileMenuOpen ? 'open' : ''}`}
-                onClick={() => setMobileMenuOpen(open => !open)}
+                onClick={() => setMobileMenuOpen(o => !o)}
             >
                 <span className="hamburger-line" />
                 <span className="hamburger-line" />
@@ -191,7 +193,7 @@ const Navbar: React.FC<{ loginWithRedirect: () => void }> = ({ loginWithRedirect
             <div className={`mobile-menu ${mobileMenuOpen ? 'open' : ''}`}>
                 <Link to="/" className="nav-link" onClick={() => setMobileMenuOpen(false)}>{t('home')}</Link>
                 <Link to="/comments" className="nav-link" onClick={() => setMobileMenuOpen(false)}>{t('comments')}</Link>
-                <Link to="/email" className="nav-link" onClick={() => setMobileMenuOpen(false)}>Email</Link>
+                <Link to="/email" className="nav-link" onClick={() => setMobileMenuOpen(false)}>{t('email')}</Link>
                 <div className="language-toggle">
                     <button onClick={() => { i18n.changeLanguage('en'); setMobileMenuOpen(false); }}>ENG</button>
                     <button onClick={() => { i18n.changeLanguage('fr'); setMobileMenuOpen(false); }}>FR</button>
@@ -212,7 +214,6 @@ const Navbar: React.FC<{ loginWithRedirect: () => void }> = ({ loginWithRedirect
 };
 
 // ------------ CommentsPage ------------
-
 interface CommentData {
     id?: number;
     authorName: string;

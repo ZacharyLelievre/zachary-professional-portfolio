@@ -1,14 +1,15 @@
-import React, {useState} from 'react';
+// src/App.tsx
+import React from 'react';
 import { motion } from 'framer-motion';
 import './App.css';
 import './img.png';
 import ParticlesBackground from './ParticlesBackground';
-import { FaEnvelope, FaLinkedin, FaGithub } from 'react-icons/fa';
+import { FaLinkedin, FaGithub } from 'react-icons/fa';
 import { Routes, Route, Link } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import SuccessPage from './SuccessPage';
 import CommentsPage from './CommentsPage';
-import EmailPage    from './EmailPage';
+import EmailPage from './EmailPage';
 import { useTranslation } from 'react-i18next';
 
 interface Project {
@@ -35,7 +36,7 @@ interface User {
 const Navbar: React.FC<{ loginWithRedirect: () => void }> = ({ loginWithRedirect }) => {
     const { t: rawT, i18n } = useTranslation();
     const t = rawT as (key: string) => string;
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
 
     return (
         <>
@@ -153,16 +154,18 @@ const Navbar: React.FC<{ loginWithRedirect: () => void }> = ({ loginWithRedirect
 
         .login-button {
           background: linear-gradient(135deg, #2ecc71, #27ae60);
-          color: #fff;
+          color: #ffffff;
+          font-size: 1rem;
+          font-weight: bold;
           padding: 0.6rem 1.2rem;
           border: none;
           border-radius: 30px;
+          cursor: pointer;
           display: flex;
           align-items: center;
           gap: 0.5rem;
           box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
           transition: transform 0.2s ease, box-shadow 0.2s ease;
-          cursor: pointer;
         }
         .login-button:hover {
           transform: scale(1.05);
@@ -183,9 +186,11 @@ const Navbar: React.FC<{ loginWithRedirect: () => void }> = ({ loginWithRedirect
           z-index: 998;
           opacity: 0;
           transition: opacity 0.3s ease;
+          pointer-events: none;
         }
         .menu-overlay.open {
           opacity: 1;
+          pointer-events: auto;
         }
       `}</style>
 
@@ -193,7 +198,7 @@ const Navbar: React.FC<{ loginWithRedirect: () => void }> = ({ loginWithRedirect
             <nav className="navbar">
                 <Link to="/" className="nav-link">{t('home')}</Link>
                 <Link to="/comments" className="nav-link">{t('comments')}</Link>
-                <Link to="/email" className="nav-link">Email</Link>
+                <Link to="/email" className="nav-link">{t('email')}</Link>
                 <div className="language-toggle">
                     <button onClick={() => i18n.changeLanguage('en')}>ENG</button>
                     <button onClick={() => i18n.changeLanguage('fr')}>FR</button>
@@ -215,7 +220,7 @@ const Navbar: React.FC<{ loginWithRedirect: () => void }> = ({ loginWithRedirect
             <div className={`mobile-menu ${mobileMenuOpen ? 'open' : ''}`}>
                 <Link to="/" className="nav-link" onClick={() => setMobileMenuOpen(false)}>{t('home')}</Link>
                 <Link to="/comments" className="nav-link" onClick={() => setMobileMenuOpen(false)}>{t('comments')}</Link>
-                <Link to="/email" className="nav-link" onClick={() => setMobileMenuOpen(false)}>Email</Link>
+                <Link to="/email" className="nav-link" onClick={() => setMobileMenuOpen(false)}>{t('email')}</Link>
                 <div className="language-toggle">
                     <button onClick={() => { i18n.changeLanguage('en'); setMobileMenuOpen(false); }}>ENG</button>
                     <button onClick={() => { i18n.changeLanguage('fr'); setMobileMenuOpen(false); }}>FR</button>
@@ -234,6 +239,7 @@ const Navbar: React.FC<{ loginWithRedirect: () => void }> = ({ loginWithRedirect
         </>
     );
 };
+
 const App: React.FC = () => {
     const [user, setUser]   = React.useState<User | null>(null);
     const [error, setError] = React.useState<string | null>(null);
@@ -279,6 +285,7 @@ const App: React.FC = () => {
                         <Navbar loginWithRedirect={loginWithRedirect} />
                         <div className="portfolio">
                             <ParticlesBackground />
+
                             <motion.header className="hero section" {...animationProps}>
                                 <div className="profile-image-container">
                                     <img
@@ -376,17 +383,13 @@ const App: React.FC = () => {
                                     <p className="footer-subtext">{t('footerContactSubtext')}</p>
                                     <a href="/comments" className="footer-btn">{t('footerLeaveComment')}</a>
                                     <p className="footer-or">{t('footerOr')}</p>
-                                    <a href="/email" className="footer-btn">Email Me</a>
+                                    <a href="/email" className="footer-btn">{t('footerEmailMe')}</a>
                                 </div>
                                 <div className="footer-column">
                                     <h3 className="footer-title">{t('footerFollowTitle')}</h3>
                                     <div className="social-icons">
-                                        <a href="https://www.linkedin.com/in/zachary-lelièvre-757621230/">
-                                            <FaLinkedin />
-                                        </a>
-                                        <a href="https://github.com/ZacharyLelievre">
-                                            <FaGithub />
-                                        </a>
+                                        <a href="https://www.linkedin.com/in/zachary-lelièvre-757621230/"><FaLinkedin /></a>
+                                        <a href="https://github.com/ZacharyLelievre"><FaGithub /></a>
                                     </div>
                                 </div>
                                 <div className="footer-column">

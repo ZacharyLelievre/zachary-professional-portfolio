@@ -25,5 +25,14 @@
   "footerFollowTitle": "Suivez-moi",
   "footerFollowSubtext": "Suivez mon parcours et restez informé :",
   "footerResumeTitle": "Téléchargez mon CV",
-  "footerResumeSubtext": "Téléchargez une copie de mon CV dans votre langue préférée :"
+  "footerResumeSubtext": "Téléchargez une copie de mon CV dans votre langue préférée :",
+  "email": "Courriel",
+  "sendEmail": "Envoyez-moi un courriel",
+  "yourName": "Votre nom",
+  "yourEmail": "Votre courriel",
+  "subject": "Objet",
+  "message": "Message…",
+  "send": "Envoyer",
+  "sent": "Envoyé ✔️",
+  "error": "Erreur ❌"
 }
